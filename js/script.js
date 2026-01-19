@@ -198,35 +198,57 @@ const codigos = {
             511: "Network Authentication Required - Requiere autenticación de red."
         }
     ]
-}
+};
 
-const listaCodigosObj = document.getElementById("contenedor-lista-codigos");
+// Función para crear una tarjeta de código individual
+const crearTarjetaCodigo = (elemento, categoria) => {
+    const [codigo, descripcion] = Object.entries(elemento)[0];
+    
+    const codigoObj = document.createElement("div");
+    codigoObj.classList.add("codigo");
+    codigoObj.setAttribute("data-categoria", categoria);
+    codigoObj.textContent = codigo;
 
-for (const seccion in codigos) {
+    const descripcionObj = document.createElement("div");
+    descripcionObj.classList.add("descripcion");
+    descripcionObj.textContent = descripcion;
+
+    codigoObj.appendChild(descripcionObj);
+    
+    return codigoObj;
+};
+
+// Función para renderizar una sección de códigos
+const renderizarSeccion = (seccion, listaCodigos) => {
     const contenedorSeccionObj = document.createElement("div");
     contenedorSeccionObj.classList.add("contenedor-seccion");
+
+    const tituloSeccionObj = document.createElement("h2");
+    tituloSeccionObj.textContent = seccion;
+    contenedorSeccionObj.appendChild(tituloSeccionObj);
 
     const codigosObj = document.createElement("div");
     codigosObj.classList.add("codigos");
 
-    const seccionObj = document.createElement("h2");
-    seccionObj.textContent = seccion;
-    contenedorSeccionObj.appendChild(seccionObj);
-
-    codigos[seccion].forEach(elemento => {
-        const [codigo, descripcion] = Object.entries(elemento)[0];
-        const codigoObj = document.createElement("div");
-        codigoObj.classList.add("codigo");
-        codigoObj.textContent = codigo;
-
-        const descripcionObj = document.createElement("div");
-        descripcionObj.classList.add("descripcion");
-        descripcionObj.textContent = descripcion;
-
-        codigoObj.appendChild(descripcionObj);
-        codigosObj.appendChild(codigoObj);
+    listaCodigos.forEach(elemento => {
+        const tarjetaCodigo = crearTarjetaCodigo(elemento, seccion);
+        codigosObj.appendChild(tarjetaCodigo);
     });
 
     contenedorSeccionObj.appendChild(codigosObj);
-    listaCodigosObj.appendChild(contenedorSeccionObj);
-}
+    
+    return contenedorSeccionObj;
+};
+
+// Función para inicializar la lista de códigos
+const inicializar = () => {
+    const listaCodigosObj = document.getElementById("contenedor-lista-codigos");
+
+    for (const seccion in codigos) {
+        const seccionRenderizada = renderizarSeccion(seccion, codigos[seccion]);
+        listaCodigosObj.appendChild(seccionRenderizada);
+    }
+};
+
+// Inicializar la lista de códigos cuando el DOM esté listo
+inicializar();
